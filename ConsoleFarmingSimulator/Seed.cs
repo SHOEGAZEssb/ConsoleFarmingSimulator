@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleFarmingSimulator
 {
@@ -31,8 +28,8 @@ namespace ConsoleFarmingSimulator
       get { return _health; }
       private set 
       {
-        if (_health - value < 0)
-          Health = 0;
+        if (value < 0)
+          _health = 0;
         else
          _health = value; 
       }
@@ -95,16 +92,18 @@ namespace ConsoleFarmingSimulator
       private set { _lifeSpan = value; }
     }
 
-
-
     public int Age
     {
       get { return _age; }
       private set { _age = value; }
     }
-    
-    
 
+    public Crop ParentCrop
+    {
+      get { return _parentCrop; }
+      private set { _parentCrop = value; }
+    }
+    
     /// <summary>
     /// Quality of the seed
     /// </summary>
@@ -114,7 +113,7 @@ namespace ConsoleFarmingSimulator
       private set { _seedQuality = value; }
     }
     
-    public Seed (string name, double baseGrowth, Enumerations.SeedType seedType, Enumerations.Quality seedQuality, int lifeSpan, double requiredWater)
+    public Seed (string name, double baseGrowth, Enumerations.SeedType seedType, Enumerations.Quality seedQuality, int lifeSpan, double requiredWater, Crop parentCrop)
     {
       Name = name;    
       BaseGrowth = baseGrowth;
@@ -126,7 +125,8 @@ namespace ConsoleFarmingSimulator
       SeedQuality = seedQuality;
       LifeSpan = lifeSpan;
       _requiredWater = requiredWater;
-      Crops = new List<Crop>();   
+      Crops = new List<Crop>();
+      ParentCrop = parentCrop;
     }
 
     public void GetInfo()
@@ -151,13 +151,11 @@ namespace ConsoleFarmingSimulator
 
     public void Grow()
     {
-
-
+      Age++;
       double factor = 1.0;
       if(_field.Water >= _requiredWater)
       {
-        _field.Water -= _requiredWater;
-        
+        _field.Water -= _requiredWater;       
       }
       else
       {
@@ -180,6 +178,11 @@ namespace ConsoleFarmingSimulator
     public void SetField(FieldSlot field)
     {
       _field = field;
+    }
+
+    public void SetParentCrop(Crop crop)
+    {
+      ParentCrop = crop;
     }
 
     private void CalculateGrowthRate()

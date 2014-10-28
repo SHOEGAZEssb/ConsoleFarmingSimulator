@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleFarmingSimulator
 {
@@ -19,8 +16,7 @@ namespace ConsoleFarmingSimulator
     public Shop()
     {
       _soldSeeds = new Dictionary<Seed, double>();
-      _soldSeeds.Add(Standards.Cucumber(), 0.5);
-      
+      _soldSeeds.Add(Standards.Seeds.GetStandardSeed("Cucumber"), 0.5);  
     }
 
     public void ShowSoldItems()

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace ConsoleFarmingSimulator
@@ -12,18 +9,21 @@ namespace ConsoleFarmingSimulator
     private static Game _game = null;
     public static Timer GlobalSeedTimer = new Timer(5000);
     public static List<Seed> GlobalSeedList = new List<Seed>();
-    private static Shop _shop = new Shop();
-
+    private static Shop _shop;
+    
     public static Game Game
     {
       get { return _game; }
       private set { _game = value; }
+      
     }
 
     static void Main(string[] args)
     {
+      Standards.InitializeStandards();
+      _shop = new Shop();
       GlobalSeedTimer.Elapsed += new ElapsedEventHandler(GlobalSeedTimer_Tick);
-
+      
       MainMenue();
       GameLoop();
     }
@@ -77,7 +77,7 @@ namespace ConsoleFarmingSimulator
 
         anweisung = Console.ReadLine();
 
-        if (anweisung == "back" || anweisung == "b")
+        if (anweisung == "exit" || anweisung == "e")
           break;
 
         int index = int.Parse(anweisung);
