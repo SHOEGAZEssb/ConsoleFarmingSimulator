@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleFarmingSimulator
 {
@@ -11,6 +7,7 @@ namespace ConsoleFarmingSimulator
     private string _name;
     private double _weight;
     private Enumerations.Quality _cropQuality;
+    private Seed _parentSeed;
 
     public string Name
     {
@@ -30,6 +27,12 @@ namespace ConsoleFarmingSimulator
       private set { _cropQuality = value; }
     }
 
+    public Seed ParentSeed
+    {
+      get { return _parentSeed; }
+      private set { _parentSeed = value; }
+    }
+
     public Crop(string name, double weight, Seed parentSeed)
     {
       Name = name;
@@ -41,6 +44,11 @@ namespace ConsoleFarmingSimulator
     {
       Console.WriteLine("Name: " + _name);
       Console.WriteLine("Weight: " + _weight);
+    }
+
+    public void SetParentSeed(Seed seed)
+    {
+      ParentSeed = seed;
     }
 
     private void CalculateQuality(Seed parentSeed)
