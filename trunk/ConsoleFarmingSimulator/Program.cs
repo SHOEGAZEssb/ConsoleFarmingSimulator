@@ -15,7 +15,6 @@ namespace ConsoleFarmingSimulator
     {
       get { return _game; }
       private set { _game = value; }
-
     }
 
     static void Main(string[] args)
@@ -37,7 +36,7 @@ namespace ConsoleFarmingSimulator
       {
         Console.Clear();
         DrawStatusBar();
-        Console.WriteLine("Where do you want to go? [fields; stall; shop; save; exit");
+        Console.WriteLine("Where do you want to go? [fields; stall; shop; save; exit]");
         anweisung = Console.ReadLine();
 
         if (anweisung == "fields" || anweisung == "f")
@@ -114,7 +113,7 @@ namespace ConsoleFarmingSimulator
               break;
 
             Seed seed = GetSeedFromUserInput(seedToPlant);
-            field.PlantCrop(seed);
+            field.PlantSeed(seed);
             Console.Clear();
             DrawStatusBar();
             Console.WriteLine("You planted a " + seed.Name + " seed! Take good care of it!");
@@ -124,7 +123,38 @@ namespace ConsoleFarmingSimulator
         }
         else if (anweisung == "remove seed" || anweisung == "remove" || anweisung == "r")
         {
-
+          string remove;
+          while(true)
+          {
+            Console.Clear();
+            DrawStatusBar();
+            Seed plantedSeed = field.PlantedSeed;
+            if(plantedSeed != null)
+            {
+              Console.WriteLine("Do you really want to remove the following seed? This kills the seed. [yes; no; more info]");
+              plantedSeed.GetInfo();
+              remove = Console.ReadLine();
+              if (remove == "yes" || remove == "y")
+              {
+                field.RemoveSeed();
+                //TODO: put that into a method (probably the same as the exception printing)
+                Console.Clear();
+                DrawStatusBar();
+                Console.WriteLine("Seed successfully removed.");
+                Console.ReadKey();
+              }
+              else if (remove == "no" || remove == "n")
+                break;
+              else if(remove == "more info" || remove == "more" || remove == "m")
+              {
+                Console.Clear();
+                DrawStatusBar();
+                Console.WriteLine("The seed has the following Crops: ");
+                plantedSeed.GetDeepInfo();
+                Console.ReadKey();
+              }
+            }
+          }
         }
         else if (anweisung == "water field" || anweisung == "water" || anweisung == "w")
         {
