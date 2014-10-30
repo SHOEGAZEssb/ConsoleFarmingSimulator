@@ -43,17 +43,31 @@ namespace ConsoleFarmingSimulator
     /// <summary>
     /// Plants the given crop in this field
     /// </summary>
-    /// <param name="crop">Crop to plant</param>
-    public void PlantCrop(Seed crop)
+    /// <param name="seed">Crop to plant</param>
+    public void PlantSeed(Seed seed)
     {
       if (PlantedSeed == null)
       {
-        PlantedSeed = crop;
+        PlantedSeed = seed;
         PlantedSeed.SetField(this);
-        Program.GlobalSeedList.Add(crop);
+        Program.GlobalSeedList.Add(seed);
       }
       else
         throw new Exception("There is already a seed planted!");
+    }
+
+    /// <summary>
+    /// Removes the planted seed from this field and the GlobalSeedList
+    /// </summary>
+    public void RemoveSeed()
+    {
+      if (PlantedSeed != null)
+      {
+        Program.GlobalSeedList.Remove(PlantedSeed);
+        PlantedSeed = null;      
+      }
+      else
+        throw new Exception("There is no seed planted!");
     }
 
     public void GetInfo()

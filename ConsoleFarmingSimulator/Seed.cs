@@ -20,6 +20,7 @@ namespace ConsoleFarmingSimulator
     private int _age;
 
     private FieldSlot _field;
+    private double _requiredWaterBase;
     private double _requiredWater;
     private Crop _parentCrop;
 
@@ -94,7 +95,7 @@ namespace ConsoleFarmingSimulator
     }
 
     /// <summary>
-    /// The lifespan, if it is reached the seed will die
+    /// The lifespan in days, if it is reached the seed will die
     /// </summary>
     public int LifeSpan
     {
@@ -111,10 +112,13 @@ namespace ConsoleFarmingSimulator
       private set { _age = value; }
     }
 
-    public double RequiredWater
+    /// <summary>
+    /// Required water per day (base)
+    /// </summary>
+    public double RequiredWaterBase
     {
-      get { return _requiredWater; }
-      private set { _requiredWater = value; }
+      get { return _requiredWaterBase; }
+      private set { _requiredWaterBase = value; }
     }
 
     /// <summary>
@@ -149,7 +153,7 @@ namespace ConsoleFarmingSimulator
       Health = 100.0;
       SeedQuality = seedQuality;
       LifeSpan = lifeSpan;
-      RequiredWater = requiredWater;
+      RequiredWaterBase = requiredWater;
       Crops = new List<Crop>();
       ParentCrop = parentCrop;
     }
@@ -188,11 +192,11 @@ namespace ConsoleFarmingSimulator
     {
       Age++;
       double factor = 1.0;
-      if (_field.Water >= _requiredWater)
-        _field.Water -= _requiredWater;
+      if (_field.Water >= _requiredWaterBase)
+        _field.Water -= _requiredWaterBase;
       else
       {
-        double percentage = _field.Water * 100 / _requiredWater;
+        double percentage = _field.Water * 100 / _requiredWaterBase;
         _field.Water = 0;
 
         Random rnd = new Random((int)(DateTime.Now.Ticks.GetHashCode()));
@@ -227,12 +231,21 @@ namespace ConsoleFarmingSimulator
     }
 
     /// <summary>
-    /// Calculates the daily growth rate based on... (?)
+    /// Calculates the daily growth rate
     /// </summary>
     private void CalculateGrowthRate()
     {
       //TODO: do calculations based on weather, quality, current health, water, parent growth rate and a small random factor
       GrowthRate = BaseGrowth;
+    }
+
+    /// <summary>
+    /// Calculates the daily required water
+    /// </summary>
+    private void CalculateRequiredWater()
+    {
+      //TODO: do calculations based on weather, current healh, water, parent robustheit...
+      _requiredWater = RequiredWaterBase;
     }
   }
 }
