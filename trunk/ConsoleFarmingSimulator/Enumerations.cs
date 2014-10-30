@@ -1,5 +1,8 @@
 ﻿namespace ConsoleFarmingSimulator
 {
+  /// <summary>
+  /// Contains common enumerations
+  /// </summary>
   public static class Enumerations
   {
     public enum Difficulty { easy, medium, hard};

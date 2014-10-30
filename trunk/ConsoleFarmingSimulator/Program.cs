@@ -10,12 +10,12 @@ namespace ConsoleFarmingSimulator
     public static Timer GlobalSeedTimer = new Timer(5000);
     public static List<Seed> GlobalSeedList = new List<Seed>();
     private static Shop _shop;
-    
+
     public static Game Game
     {
       get { return _game; }
       private set { _game = value; }
-      
+
     }
 
     static void Main(string[] args)
@@ -23,7 +23,7 @@ namespace ConsoleFarmingSimulator
       Standards.InitializeStandards();
       _shop = new Shop();
       GlobalSeedTimer.Elapsed += new ElapsedEventHandler(GlobalSeedTimer_Tick);
-      
+
       MainMenue();
       GameLoop();
     }
@@ -56,7 +56,7 @@ namespace ConsoleFarmingSimulator
         {
 
         }
-        else if(anweisung == "exit" || anweisung == "e")
+        else if (anweisung == "exit" || anweisung == "e")
         {
           Console.WriteLine("Hope you enyjoyed your stay! :)");
           Environment.Exit(0);
@@ -68,7 +68,7 @@ namespace ConsoleFarmingSimulator
     {
       string anweisung;
       Console.Clear();
-      while(true)
+      while (true)
       {
         DrawStatusBar();
         Console.WriteLine("Which field do you want to manage? [enter index; exit]");
@@ -88,12 +88,12 @@ namespace ConsoleFarmingSimulator
 
     private static void ManageField(FieldSlot field)
     {
-      string anweisung;     
-      while(true)
+      string anweisung;
+      while (true)
       {
         Console.Clear();
         DrawStatusBar();
-        Console.WriteLine("What do you want to do? [plant seed; remove seed; crop info; sell field; back");
+        Console.WriteLine("What do you want to do? [plant seed; remove seed; water field; crop info; sell field; back");
         Console.WriteLine();
         field.GetInfo();
 
@@ -101,7 +101,7 @@ namespace ConsoleFarmingSimulator
 
         if (anweisung == "plant seed" || anweisung == "plant" || anweisung == "p")
         {
-          string seedToPlant;          
+          string seedToPlant;
           while (true)
           {
             Console.Clear();
@@ -117,7 +117,7 @@ namespace ConsoleFarmingSimulator
             field.PlantCrop(seed);
             Console.Clear();
             DrawStatusBar();
-            Console.WriteLine("You planted a " + seed.Name  + " seed! Take good care of it!");
+            Console.WriteLine("You planted a " + seed.Name + " seed! Take good care of it!");
             Console.ReadKey();
             break;
           }
@@ -125,6 +125,53 @@ namespace ConsoleFarmingSimulator
         else if (anweisung == "remove seed" || anweisung == "remove" || anweisung == "r")
         {
 
+        }
+        else if (anweisung == "water field" || anweisung == "water" || anweisung == "w")
+        {
+          string waterCount;
+          while(true)
+          {
+            Console.Clear();
+            DrawStatusBar();
+            Console.WriteLine("How many litres to you want to water? This field currently has " + field.Water + " litres of water in it. [number; back]" );
+            waterCount = Console.ReadLine();
+            if (waterCount == "back" || waterCount == "b")
+              break;
+
+            try
+            {
+              int water = int.Parse(waterCount);
+              double price = 0; //TODO: calculate water price based on weather, difficulty etc...
+
+              string answer;
+              while(true)
+              {
+                Console.Clear();
+                DrawStatusBar();
+                Console.WriteLine("You are about to water your field with " + water + " litres.");
+                Console.WriteLine("That will cost " + price + "$. Do you want to continue? [yes; no]");
+                answer = Console.ReadLine();
+
+                if (answer == "yes" || answer == "y")
+                {
+                  _game.Money -= price;
+                  field.Water += water;
+                }
+                else if (answer == "no" || answer == "n")
+                  break;
+              }
+              
+              break;
+            }
+            catch
+            {
+              //TODO: put this as exception printing standard and not PrintExceptionMessage();
+              Console.Clear();
+              DrawStatusBar();
+              Console.WriteLine("Thats not a valid number!");
+              Console.ReadKey();
+            }
+          }
         }
         else if (anweisung == "crop info" || anweisung == "c")
         {
@@ -143,16 +190,16 @@ namespace ConsoleFarmingSimulator
     {
       string anweisung;
       Console.Clear();
-      while(true)
-      {        
+      while (true)
+      {
         DrawStatusBar();
         Console.WriteLine("Welcome to the shop! What do you want? [buy; sell; exit]");
         anweisung = Console.ReadLine();
 
-        if(anweisung == "buy" || anweisung == "b")
+        if (anweisung == "buy" || anweisung == "b")
         {
           Console.Clear();
-          while(true)
+          while (true)
           {
             DrawStatusBar();
             Console.WriteLine("What do you want to buy? [enter name; back]");
@@ -172,18 +219,18 @@ namespace ConsoleFarmingSimulator
               Console.ReadKey();
               break;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
               Console.Clear();
-              PrintExceptionMessage(ex.Message);             
+              PrintExceptionMessage(ex.Message);
             }
           }
         }
-        else if(anweisung == "sell" || anweisung == "s")
+        else if (anweisung == "sell" || anweisung == "s")
         {
 
         }
-        else if(anweisung == "exit" || anweisung == "e")
+        else if (anweisung == "exit" || anweisung == "e")
         {
           break;
         }
@@ -195,7 +242,7 @@ namespace ConsoleFarmingSimulator
     static void MainMenue()
     {
       string anweisung = "";
-      
+
       while (true)
       {
         Console.WriteLine("Welcome to the 'Console Farming Simulator'! What do you want to do? [new game; continue; exit]");
@@ -246,6 +293,9 @@ namespace ConsoleFarmingSimulator
       GlobalSeedTimer.Start();
     }
 
+    /// <summary>
+    /// Draw the status bar
+    /// </summary>
     private static void DrawStatusBar()
     {
       int oldTop = Console.CursorTop;
@@ -299,18 +349,23 @@ namespace ConsoleFarmingSimulator
       }
       Console.WriteLine();
       Console.ResetColor();
-      if(oldTop != 0)
+      if (oldTop != 0)
         Console.SetCursorPosition(oldLeft, oldTop);
       else
         Console.SetCursorPosition(oldLeft, 4);
     }
 
+    /// <summary>
+    /// Lets all planted seeds make their grow procedure
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private static void GlobalSeedTimer_Tick(object sender, ElapsedEventArgs e)
     {
       _game.Day++;
       DrawStatusBar();
 
-      foreach(Seed seed in GlobalSeedList)
+      foreach (Seed seed in GlobalSeedList)
       {
         seed.Grow();
       }
@@ -328,6 +383,11 @@ namespace ConsoleFarmingSimulator
       Console.ResetColor();
     }
 
+    /// <summary>
+    /// Convert plant input string eg "Cucumber 1" into the corresponding seed from the seed inventory
+    /// </summary>
+    /// <param name="userInput">Input string</param>
+    /// <returns>Seed from seed inventory</returns>
     private static Seed GetSeedFromUserInput(string userInput)
     {
       int index = int.Parse(userInput[userInput.Length - 1].ToString());

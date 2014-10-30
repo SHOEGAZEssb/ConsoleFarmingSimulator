@@ -37,7 +37,7 @@ namespace ConsoleFarmingSimulator
       /// </summary>
       public static void LinkSeedParents()
       {
-        foreach(KeyValuePair<string, Seed> entry in _seedDic)
+        foreach (KeyValuePair<string, Seed> entry in _seedDic)
         {
           entry.Value.SetParentCrop(Crops.GetStandardCrop(entry.Key));
         }
@@ -66,7 +66,7 @@ namespace ConsoleFarmingSimulator
       /// </summary>
       public static void InitializeStandardCrops()
       {
-        _cropDic.Add("Cucumber",new Crop("Cucumber", 0.4, null));
+        _cropDic.Add("Cucumber", new Crop("Cucumber", 0.4, null));
       }
 
       /// <summary>

@@ -2,17 +2,26 @@
 
 namespace ConsoleFarmingSimulator
 {
+  /// <summary>
+  /// Describes a field which is used to plant seeds
+  /// </summary>
   public class FieldSlot
   {
     private Seed _plantedSeed;
     private double _water;
 
+    /// <summary>
+    /// The planted seed
+    /// </summary>
     public Seed PlantedSeed
     {
       get { return _plantedSeed; }
       private set { _plantedSeed = value; }
     }
 
+    /// <summary>
+    /// Current litres of water in the field
+    /// </summary>
     public double Water
     {
       get { return _water; }
@@ -23,11 +32,18 @@ namespace ConsoleFarmingSimulator
       }
     }
 
+    /// <summary>
+    /// Initializes a new fieldSlot
+    /// </summary>
     public FieldSlot()
     {
       Water = 100.0;
     }
 
+    /// <summary>
+    /// Plants the given crop in this field
+    /// </summary>
+    /// <param name="crop">Crop to plant</param>
     public void PlantCrop(Seed crop)
     {
       if (PlantedSeed == null)

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ConsoleFarmingSimulator
 {
+  /// <summary>
+  /// Represents a seed which will grow to give crops
+  /// </summary>
   public class Seed
   {
     private string _name;
@@ -26,12 +29,12 @@ namespace ConsoleFarmingSimulator
     public double Health
     {
       get { return _health; }
-      private set 
+      private set
       {
         if (value < 0)
           _health = 0;
         else
-         _health = value; 
+          _health = value;
       }
     }
 
@@ -80,30 +83,49 @@ namespace ConsoleFarmingSimulator
       private set { _baseGrowth = value; }
     }
 
+    /// <summary>
+    /// Type of the seed
+    /// <remarks>Vegetable or fruit</remarks>
+    /// </summary>
     public Enumerations.SeedType SeedType
     {
       get { return _seedType; }
       private set { _seedType = value; }
     }
-      
+
+    /// <summary>
+    /// The lifespan, if it is reached the seed will die
+    /// </summary>
     public int LifeSpan
     {
       get { return _lifeSpan; }
       private set { _lifeSpan = value; }
     }
 
+    /// <summary>
+    /// Days planted
+    /// </summary>
     public int Age
     {
       get { return _age; }
       private set { _age = value; }
     }
 
+    public double RequiredWater
+    {
+      get { return _requiredWater; }
+      private set { _requiredWater = value; }
+    }
+
+    /// <summary>
+    /// THe crop which contained this seed
+    /// </summary>
     public Crop ParentCrop
     {
       get { return _parentCrop; }
       private set { _parentCrop = value; }
     }
-    
+
     /// <summary>
     /// Quality of the seed
     /// </summary>
@@ -112,10 +134,13 @@ namespace ConsoleFarmingSimulator
       get { return _seedQuality; }
       private set { _seedQuality = value; }
     }
-    
-    public Seed (string name, double baseGrowth, Enumerations.SeedType seedType, Enumerations.Quality seedQuality, int lifeSpan, double requiredWater, Crop parentCrop)
+
+    /// <summary>
+    /// Initializes a new seed
+    /// </summary>
+    public Seed(string name, double baseGrowth, Enumerations.SeedType seedType, Enumerations.Quality seedQuality, int lifeSpan, double requiredWater, Crop parentCrop)
     {
-      Name = name;    
+      Name = name;
       BaseGrowth = baseGrowth;
       CalculateGrowthRate();
       SeedType = seedType;
@@ -124,13 +149,17 @@ namespace ConsoleFarmingSimulator
       Health = 100.0;
       SeedQuality = seedQuality;
       LifeSpan = lifeSpan;
-      _requiredWater = requiredWater;
+      RequiredWater = requiredWater;
       Crops = new List<Crop>();
       ParentCrop = parentCrop;
     }
 
+    /// <summary>
+    /// Displays info about the seed
+    /// </summary>
     public void GetInfo()
     {
+      //TODO: return strings rather than print them
       Console.WriteLine("Name: " + Name);
       Console.WriteLine("Type: " + SeedType);
       Console.WriteLine("Growth: " + Growth + "%");
@@ -140,6 +169,9 @@ namespace ConsoleFarmingSimulator
       Console.WriteLine();
     }
 
+    /// <summary>
+    /// Get info about all crops on this seed
+    /// </summary>
     public void GetDeepInfo()
     {
       foreach (Crop crop in Crops)
@@ -149,25 +181,26 @@ namespace ConsoleFarmingSimulator
       }
     }
 
+    /// <summary>
+    /// Daily grow process
+    /// </summary>
     public void Grow()
     {
       Age++;
       double factor = 1.0;
-      if(_field.Water >= _requiredWater)
-      {
-        _field.Water -= _requiredWater;       
-      }
+      if (_field.Water >= _requiredWater)
+        _field.Water -= _requiredWater;
       else
       {
         double percentage = _field.Water * 100 / _requiredWater;
         _field.Water = 0;
 
         Random rnd = new Random((int)(DateTime.Now.Ticks.GetHashCode()));
-        int healthDamage = rnd.Next(1, 10 - (int)(percentage/50)); //TODO: add robustheit lol
-        Health -= healthDamage;      
+        int healthDamage = rnd.Next(1, 10 - (int)(percentage / 50)); //TODO: add robustheit lol
+        Health -= healthDamage;
       }
 
-      if(Health != 0)
+      if (Health != 0)
         Growth += GrowthRate;
       else
       {
@@ -175,16 +208,27 @@ namespace ConsoleFarmingSimulator
       }
     }
 
+    /// <summary>
+    /// Sets the field in which this seed is planted
+    /// </summary>
+    /// <param name="field">Field in which this seed is planted</param>
     public void SetField(FieldSlot field)
     {
       _field = field;
     }
 
+    /// <summary>
+    /// Sets the parent crop
+    /// </summary>
+    /// <param name="crop">The parent crop of this seed</param>
     public void SetParentCrop(Crop crop)
     {
       ParentCrop = crop;
     }
 
+    /// <summary>
+    /// Calculates the daily growth rate based on... (?)
+    /// </summary>
     private void CalculateGrowthRate()
     {
       //TODO: do calculations based on weather, quality, current health, water, parent growth rate and a small random factor
