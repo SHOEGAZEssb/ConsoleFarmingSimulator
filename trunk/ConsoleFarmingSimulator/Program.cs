@@ -66,9 +66,10 @@ namespace ConsoleFarmingSimulator
     private static void Fields()
     {
       string anweisung;
-      Console.Clear();
+
       while (true)
       {
+        Console.Clear();
         DrawStatusBar();
         Console.WriteLine("Which field do you want to manage? [enter index; exit]");
         Console.WriteLine();
@@ -79,9 +80,15 @@ namespace ConsoleFarmingSimulator
         if (anweisung == "exit" || anweisung == "e")
           break;
 
-        int index = int.Parse(anweisung);
-        //TODO: check if index exists
-        ManageField(_game.Fields[index - 1]);
+        try
+        {
+          int index = int.Parse(anweisung);
+          ManageField(_game.Fields[index - 1]);
+        }
+        catch (Exception ex)
+        {
+          PrintInfoMessageAndWait(ex.Message);
+        }
       }
     }
 
@@ -114,22 +121,19 @@ namespace ConsoleFarmingSimulator
 
             Seed seed = GetSeedFromUserInput(seedToPlant);
             field.PlantSeed(seed);
-            Console.Clear();
-            DrawStatusBar();
-            Console.WriteLine("You planted a " + seed.Name + " seed! Take good care of it!");
-            Console.ReadKey();
+            PrintInfoMessageAndWait("You planted a " + seed.Name + " seed! Take good care of it!");
             break;
           }
         }
         else if (anweisung == "remove seed" || anweisung == "remove" || anweisung == "r")
         {
           string remove;
-          while(true)
+          while (true)
           {
             Console.Clear();
             DrawStatusBar();
             Seed plantedSeed = field.PlantedSeed;
-            if(plantedSeed != null)
+            if (plantedSeed != null)
             {
               Console.WriteLine("Do you really want to remove the following seed? This kills the seed. [yes; no; more info]");
               plantedSeed.GetInfo();
@@ -137,16 +141,13 @@ namespace ConsoleFarmingSimulator
               if (remove == "yes" || remove == "y")
               {
                 field.RemoveSeed();
-                //TODO: put that into a method (probably the same as the exception printing)
-                Console.Clear();
-                DrawStatusBar();
-                Console.WriteLine("Seed successfully removed.");
-                Console.ReadKey();
+                PrintInfoMessageAndWait("Seed successfully removed.");
               }
               else if (remove == "no" || remove == "n")
                 break;
-              else if(remove == "more info" || remove == "more" || remove == "m")
+              else if (remove == "more info" || remove == "more" || remove == "m")
               {
+                //TODO: PrintInfo Message, have to rewrite GetDeepInfo first to return strings
                 Console.Clear();
                 DrawStatusBar();
                 Console.WriteLine("The seed has the following Crops: ");
@@ -159,11 +160,11 @@ namespace ConsoleFarmingSimulator
         else if (anweisung == "water field" || anweisung == "water" || anweisung == "w")
         {
           string waterCount;
-          while(true)
+          while (true)
           {
             Console.Clear();
             DrawStatusBar();
-            Console.WriteLine("How many litres to you want to water? This field currently has " + field.Water + " litres of water in it. [number; back]" );
+            Console.WriteLine("How many litres to you want to water? This field currently has " + field.Water + " litres of water in it. [number; back]");
             waterCount = Console.ReadLine();
             if (waterCount == "back" || waterCount == "b")
               break;
@@ -174,32 +175,27 @@ namespace ConsoleFarmingSimulator
               double price = 0; //TODO: calculate water price based on weather, difficulty etc...
 
               string answer;
-              while(true)
+              while (true)
               {
-                Console.Clear();
-                DrawStatusBar();
-                Console.WriteLine("You are about to water your field with " + water + " litres.");
-                Console.WriteLine("That will cost " + price + "$. Do you want to continue? [yes; no]");
+                PrintInfoMessage("You are about to water your field with " + water + " litres. \r\nThat will cost " + price + "$. Do you want to continue? [yes; no]");
                 answer = Console.ReadLine();
 
                 if (answer == "yes" || answer == "y")
                 {
                   _game.Money -= price;
                   field.Water += water;
+                  PrintInfoMessageAndWait("You watered your field with " + water + " litres.");
+                  break;
                 }
                 else if (answer == "no" || answer == "n")
                   break;
               }
-              
+
               break;
             }
             catch
             {
-              //TODO: put this as exception printing standard and not PrintExceptionMessage();
-              Console.Clear();
-              DrawStatusBar();
-              Console.WriteLine("Thats not a valid number!");
-              Console.ReadKey();
+              PrintInfoMessageAndWait("Thats not a valid number!");
             }
           }
         }
@@ -219,42 +215,16 @@ namespace ConsoleFarmingSimulator
     static void Shop()
     {
       string anweisung;
-      Console.Clear();
       while (true)
       {
+        Console.Clear();
         DrawStatusBar();
         Console.WriteLine("Welcome to the shop! What do you want? [buy; sell; exit]");
         anweisung = Console.ReadLine();
 
         if (anweisung == "buy" || anweisung == "b")
         {
-          Console.Clear();
-          while (true)
-          {
-            DrawStatusBar();
-            Console.WriteLine("What do you want to buy? [enter name; back]");
-            Console.WriteLine();
-            _shop.ShowSoldItems();
-
-            string kaufAnweisung = Console.ReadLine();
-            if (kaufAnweisung == "back" || kaufAnweisung == "b")
-              break;
-
-            try
-            {
-              _shop.BuyItem(kaufAnweisung);
-              Console.Clear();
-              DrawStatusBar();
-              Console.WriteLine("You bought a " + kaufAnweisung + "! It has been placed in your inventory.");
-              Console.ReadKey();
-              break;
-            }
-            catch (Exception ex)
-            {
-              Console.Clear();
-              PrintExceptionMessage(ex.Message);
-            }
-          }
+          ShopBuy();
         }
         else if (anweisung == "sell" || anweisung == "s")
         {
@@ -269,10 +239,36 @@ namespace ConsoleFarmingSimulator
       }
     }
 
+    static void ShopBuy()
+    {
+      while (true)
+      {
+        Console.Clear();
+        DrawStatusBar();
+        Console.WriteLine("What do you want to buy? [enter name; back]");
+        Console.WriteLine();
+        _shop.ShowSoldItems();
+
+        string kaufAnweisung = Console.ReadLine();
+        if (kaufAnweisung == "back" || kaufAnweisung == "b")
+          break;
+
+        try
+        {
+          _shop.BuyItem(kaufAnweisung);
+          PrintInfoMessageAndWait("You bought a " + kaufAnweisung + "! It has been placed in your inventory.");
+          break;
+        }
+        catch (Exception ex)
+        {
+          PrintInfoMessageAndWait(ex.Message);
+        }
+      }
+    }
+
     static void MainMenue()
     {
       string anweisung = "";
-
       while (true)
       {
         Console.WriteLine("Welcome to the 'Console Farming Simulator'! What do you want to do? [new game; continue; exit]");
@@ -287,6 +283,7 @@ namespace ConsoleFarmingSimulator
 
           while (true)
           {
+            Console.Clear();
             Console.WriteLine("On what difficulty do you want to play? [easy; medium; hard");
             string diff = Console.ReadLine();
             try
@@ -296,8 +293,10 @@ namespace ConsoleFarmingSimulator
             }
             catch (Exception ex)
             {
+              //Dont use PrintInfoMessage here because _game is not yet initialized.
               Console.Clear();
-              PrintExceptionMessage(ex.Message);
+              Console.WriteLine("Thats not a valid difficulty!");
+              Console.ReadKey();
             }
           }
 
@@ -322,6 +321,8 @@ namespace ConsoleFarmingSimulator
 
       GlobalSeedTimer.Start();
     }
+
+
 
     /// <summary>
     /// Draw the status bar
@@ -402,15 +403,26 @@ namespace ConsoleFarmingSimulator
     }
 
     /// <summary>
-    /// Helper method to print the exception message under the status bar
+    /// Clears the console, prints the status bar and message and waits for a keystroke
     /// </summary>
-    /// <param name="message">Message to print</param>
-    private static void PrintExceptionMessage(string message)
+    /// <param name="message">Message to print after the status bar</param>
+    private static void PrintInfoMessageAndWait(string message)
     {
-      Console.SetCursorPosition(0, 4);
-      Console.ForegroundColor = ConsoleColor.Green;
+      Console.Clear();
+      DrawStatusBar();
       Console.WriteLine(message);
-      Console.ResetColor();
+      Console.ReadKey();
+    }
+
+    /// <summary>
+    /// Clears the console, prints the status bar and message
+    /// </summary>
+    /// <param name="message">Message to print after the status bar</param>
+    private static void PrintInfoMessage(string message)
+    {
+      Console.Clear();
+      DrawStatusBar();
+      Console.WriteLine(message);
     }
 
     /// <summary>

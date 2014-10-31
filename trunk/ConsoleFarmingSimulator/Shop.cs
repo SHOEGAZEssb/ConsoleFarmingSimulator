@@ -65,6 +65,8 @@ namespace ConsoleFarmingSimulator
           else
             throw new Exception("Not enough money!"); //TODO: exception -> Game.Money
         }
+        else
+          throw new Exception("The shop does not sell this item!");
       }
     }
   }
