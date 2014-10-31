@@ -247,5 +247,11 @@ namespace ConsoleFarmingSimulator
       //TODO: do calculations based on weather, current healh, water, parent robustheit...
       _requiredWater = RequiredWaterBase;
     }
+
+    public double CalculatePrice()
+    {
+      //TODO: Calculate price based on health, quality etc..
+      return 10;
+    }
   }
 }

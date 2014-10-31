@@ -228,7 +228,7 @@ namespace ConsoleFarmingSimulator
         }
         else if (anweisung == "sell" || anweisung == "s")
         {
-
+          ShopSell();
         }
         else if (anweisung == "exit" || anweisung == "e")
         {
@@ -236,6 +236,51 @@ namespace ConsoleFarmingSimulator
         }
 
         Console.Clear();
+      }
+    }
+
+    private static void ShopSell()
+    {
+      string anweisung;
+      while(true)
+      {
+        Console.Clear();
+        DrawStatusBar();
+        Console.WriteLine("What do you want to sell? [enter name + index; back]");
+        Game.PrintSeedInventory();
+        anweisung = Console.ReadLine();
+
+        if (anweisung == "back" || anweisung == "b")
+          break;
+        else
+        {
+          try
+          {
+            Seed seedToSell = GetSeedFromUserInput(anweisung);
+            string sellSeed;
+            double price = seedToSell.CalculatePrice();
+            while (true)
+            {
+              PrintInfoMessage("Do you really want to sell the following seed? It will give you " + price + "$ [yes; no]");
+              seedToSell.GetInfo();
+              sellSeed = Console.ReadLine();
+
+              if (sellSeed == "yes" || sellSeed == "y")
+              {
+                Game.RemoveSeedFromInventory(seedToSell);
+                Game.Money += price;
+                PrintInfoMessageAndWait("You sold a " + seedToSell.Name + " seed for " + price + "$");
+                break;
+              }
+              else if (sellSeed == "no" || sellSeed == "n")
+                break;
+            }
+          }
+          catch(Exception ex)
+          {
+            PrintInfoMessageAndWait("You dont have that seed!");
+          }
+        }
       }
     }
 
