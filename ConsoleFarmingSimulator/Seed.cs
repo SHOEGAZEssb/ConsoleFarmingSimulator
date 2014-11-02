@@ -200,11 +200,13 @@ namespace ConsoleFarmingSimulator
     {
       Age++;
       double factor = 1.0;
-      if (_field.Water >= _requiredWaterBase)
-        _field.Water -= _requiredWaterBase;
+
+      CalculateRequiredWater();
+      if (_field.Water >= _requiredWater)
+        _field.Water -= _requiredWater;
       else
       {
-        double percentage = _field.Water * 100 / _requiredWaterBase;
+        double percentage = _field.Water * 100 / _requiredWater;
         _field.Water = 0;
 
         Random rnd = new Random((int)(DateTime.Now.Ticks.GetHashCode()));
@@ -217,6 +219,18 @@ namespace ConsoleFarmingSimulator
       else
       {
 
+      }
+    }
+
+    /// <summary>
+    /// Harvest all crops from this seed
+    /// </summary>
+    public void Harvest()
+    {
+      foreach(Crop crop in Crops)
+      {
+        Program.Game.AddCropToInventory(crop);
+        this.Crops.Remove(crop);
       }
     }
 
@@ -255,7 +269,7 @@ namespace ConsoleFarmingSimulator
       //TODO: do calculations based on weather, current healh, water, parent robustheit...
       double faktor = 1.0;
 
-      if(Program.Game.CurrentWeather.WeatherCondition == Enumerations.WeatherCondition.Sun)
+      if (Program.Game.CurrentWeather.WeatherCondition == Enumerations.WeatherCondition.Sun)
       {
         faktor += Program.Game.CurrentWeather.Temperature / 70;
       }
