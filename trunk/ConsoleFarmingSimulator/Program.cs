@@ -342,6 +342,7 @@ namespace ConsoleFarmingSimulator
         if (anweisung == "new game" || anweisung == "n")
         {
           NewGameDialog();
+          break;
         }
         else if (anweisung == "continue" || anweisung == "c")
         {
@@ -457,6 +458,7 @@ namespace ConsoleFarmingSimulator
     private static void GlobalSeedTimer_Tick(object sender, ElapsedEventArgs e)
     {
       Game.Day++;
+      Game.CurrentWeather.CalculateWeather();
       DrawStatusBar();
 
       foreach (Seed seed in GlobalSeedList)
