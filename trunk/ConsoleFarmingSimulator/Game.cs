@@ -16,6 +16,7 @@ namespace ConsoleFarmingSimulator
 
     private List<FieldSlot> _fields;
     private Dictionary<string, List<Seed>> _seedInventory;
+    private Dictionary<string, List<Crop>> _cropInventory;
     private Weather _currentWeather;
 
     /// <summary>
@@ -90,6 +91,12 @@ namespace ConsoleFarmingSimulator
       private set { _seedInventory = value; }
     }
 
+    public Dictionary<string, List<Crop>> CropInventory
+    {
+      get { return _cropInventory; }
+      private set { _cropInventory = value; }
+    }
+
     /// <summary>
     /// Day of current game
     /// </summary>
@@ -113,7 +120,8 @@ namespace ConsoleFarmingSimulator
     public Game(string farmName, Enumerations.Difficulty difficulty)
     {
       SeedInventory = new Dictionary<string, List<Seed>>();
-      InitializeSeedInventory();
+      CropInventory = new Dictionary<string, List<Crop>>();
+      InitializeInventories();
       FarmName = farmName;
       Difficulty = difficulty;
       _money = 10000.0;
@@ -143,13 +151,19 @@ namespace ConsoleFarmingSimulator
     /// <summary>
     /// Initialize the seed inventory with empty entries for each seed type in the game
     /// </summary>
-    private void InitializeSeedInventory()
+    private void InitializeInventories()
     {
-      SeedInventory.Add("Cucumber", new List<Seed>());
+      foreach (string name in Standards.Objects)
+      {
+        SeedInventory.Add(name, new List<Seed>());
+        CropInventory.Add(name, new List<Crop>());
+      }
     }
 
+
+
     /// <summary>
-    /// Add a seed to the seed inventory
+    /// Adds a seed to the seed inventory
     /// </summary>
     /// <param name="seed">Seed to add to the seed inventory</param>
     public void AddSeedToInventory(Seed seed)
@@ -164,6 +178,24 @@ namespace ConsoleFarmingSimulator
     public void RemoveSeedFromInventory(Seed seed)
     {
       SeedInventory[seed.Name].Remove(seed);
+    }
+
+    /// <summary>
+    /// Adds a crop to the inventory
+    /// </summary>
+    /// <param name="crop">Crop to add to the inventory</param>
+    public void AddCropToInventory(Crop crop)
+    {
+      CropInventory[crop.Name].Add(crop);
+    }
+
+    /// <summary>
+    /// Removes a crop from the inventory
+    /// </summary>
+    /// <param name="crop">Crop to remove from inventory</param>
+    public void RemoveCropFromInventory(Crop crop)
+    {
+      CropInventory[crop.Name].Remove(crop);
     }
 
     /// <summary>

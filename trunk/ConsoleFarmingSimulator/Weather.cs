@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleFarmingSimulator
 {
+  /// <summary>
+  /// Represents the current weather with temperature and condition
+  /// </summary>
   class Weather
   {
     private double _temperature;
@@ -13,24 +12,36 @@ namespace ConsoleFarmingSimulator
     private int _currentStreak;
     private int _weatherChangeChance;
 
+    /// <summary>
+    /// Current temperature
+    /// </summary>
     public double Temperature
     {
       get { return _temperature; }
       private set { _temperature = value; }
     }
 
+    /// <summary>
+    /// Current weather condition
+    /// </summary>
     public Enumerations.WeatherCondition WeatherCondition
     {
       get { return _weatherCondition; }
       private set { _weatherCondition = value; }
     }
 
+    /// <summary>
+    /// The current weather condition streak in days
+    /// </summary>
     public int CurrentStreak
     {
       get { return _currentStreak; }
       private set { _currentStreak = value; }
     }
 
+    /// <summary>
+    /// The daily chance that the weather changes
+    /// </summary>
     public int WeatherChangeChance
     {
       get { return _weatherChangeChance; }
@@ -45,6 +56,12 @@ namespace ConsoleFarmingSimulator
       }
     }
 
+    /// <summary>
+    /// Initializes the weather
+    /// </summary>
+    /// <param name="temperature"></param>
+    /// <param name="weatherCondition"></param>
+    /// <param name="currentStreak"></param>
     public Weather(double temperature, Enumerations.WeatherCondition weatherCondition, int currentStreak)
     {
       Temperature = temperature;
@@ -52,6 +69,9 @@ namespace ConsoleFarmingSimulator
       CurrentStreak = currentStreak;
     }
 
+    /// <summary>
+    /// Daily calculation of the weather
+    /// </summary>
     public void CalculateWeather()
     {
       CurrentStreak++;

@@ -86,10 +86,25 @@ namespace ConsoleFarmingSimulator
     /// </summary>
     public static void InitializeStandards()
     {
+      InitializeGameObjects();
       Seeds.InitializeStandardSeeds();
       Crops.InitializeStandardCrops();
       Crops.LinkCropParents();
       Seeds.LinkSeedParents();
+    }
+
+    /// <summary>
+    /// Holds all names of objects in this game
+    /// </summary>
+    public static List<string> Objects { get; private set; }
+
+    /// <summary>
+    /// Initializes a list with a names of all objects in the game (eg fruits and vegetables)
+    /// </summary>
+    private static void InitializeGameObjects()
+    {
+      Objects = new List<string>();
+      Objects.Add("Cucumber");
     }
   }
 }
