@@ -16,6 +16,7 @@ namespace ConsoleFarmingSimulator
 
     private List<FieldSlot> _fields;
     private Dictionary<string, List<Seed>> _seedInventory;
+    private Weather _currentWeather;
 
     /// <summary>
     /// Difficulty of current game
@@ -98,6 +99,12 @@ namespace ConsoleFarmingSimulator
       set { _day = value; }
     }
 
+    public Weather CurrentWeather
+    {
+      get { return _currentWeather; }
+      private set { _currentWeather = value;  }
+    }
+
     /// <summary>
     /// Initializes a new game
     /// </summary>
@@ -113,6 +120,7 @@ namespace ConsoleFarmingSimulator
       Fields = new List<FieldSlot>();
       Fields.Add(new FieldSlot());
       Fields.Add(new FieldSlot());
+      CurrentWeather = new Weather(25.0, Enumerations.WeatherCondition.Sun, 0);
     }   
 
     /// <summary>

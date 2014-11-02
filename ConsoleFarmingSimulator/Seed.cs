@@ -18,6 +18,7 @@ namespace ConsoleFarmingSimulator
     private Enumerations.Quality _seedQuality;
     private int _lifeSpan;
     private int _age;
+    private double _optimalTemperature;
 
     private FieldSlot _field;
     private double _requiredWaterBase;
@@ -139,10 +140,16 @@ namespace ConsoleFarmingSimulator
       private set { _seedQuality = value; }
     }
 
+    public double OptimalTemperature
+    {
+      get { return _optimalTemperature; }
+      private set { _optimalTemperature = value; }
+    }
+
     /// <summary>
     /// Initializes a new seed
     /// </summary>
-    public Seed(string name, double baseGrowth, Enumerations.SeedType seedType, Enumerations.Quality seedQuality, int lifeSpan, double requiredWater, Crop parentCrop)
+    public Seed(string name, double baseGrowth, Enumerations.SeedType seedType, Enumerations.Quality seedQuality, int lifeSpan, double requiredWater, Crop parentCrop, double optimalTemperature)
     {
       Name = name;
       BaseGrowth = baseGrowth;
@@ -156,6 +163,7 @@ namespace ConsoleFarmingSimulator
       RequiredWaterBase = requiredWater;
       Crops = new List<Crop>();
       ParentCrop = parentCrop;
+      OptimalTemperature = optimalTemperature;
     }
 
     /// <summary>
@@ -245,7 +253,17 @@ namespace ConsoleFarmingSimulator
     private void CalculateRequiredWater()
     {
       //TODO: do calculations based on weather, current healh, water, parent robustheit...
-      _requiredWater = RequiredWaterBase;
+      double faktor = 1.0;
+
+      if(Program.Game.CurrentWeather.WeatherCondition == Enumerations.WeatherCondition.Sun)
+      {
+        faktor += Program.Game.CurrentWeather.Temperature / 70;
+      }
+
+      if (Program.Game.CurrentWeather.Temperature < OptimalTemperature + 2 && Program.Game.CurrentWeather.Temperature > OptimalTemperature - 2)
+        faktor -= 0.25;
+
+      _requiredWater = RequiredWaterBase * faktor;
     }
 
     public double CalculatePrice()
