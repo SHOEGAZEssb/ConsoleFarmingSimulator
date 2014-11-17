@@ -9,21 +9,23 @@ namespace ConsoleFarmingSimulator
   public class Seed
   {
     private string _name;
-    private double _growth;
-    private double _growthRate;
-    private double _baseGrowth;
+    private double _seedGrowth;
+    private double _seedGrowthRate;
+    private double _baseSeedGrowth;
+    private double _cropGrowth;
+    private double _cropGrowthRate;
+    private double _baseCropGrowth;
     private List<Crop> _crops;
     private double _health;
     private Enumerations.SeedType _seedType;
     private Enumerations.Quality _seedQuality;
-    private int _lifeSpan;
     private int _age;
     private double _optimalTemperature;
-
     private FieldSlot _field;
     private double _requiredWaterBase;
     private double _requiredWater;
     private Crop _parentCrop;
+    private int _cropRate;
 
     /// <summary>
     /// The health of the crop. If it drops to 0, the seed will die and be unusable.
@@ -46,7 +48,7 @@ namespace ConsoleFarmingSimulator
     public List<Crop> Crops
     {
       get { return _crops; }
-      private set { }
+      private set { _crops = value; }
     }
 
     /// <summary>
@@ -61,47 +63,55 @@ namespace ConsoleFarmingSimulator
     /// <summary>
     /// Growth of the seed. 
     /// </summary>
-    public double Growth
+    public double SeedGrowth
     {
-      get { return _growth; }
-      private set { _growth = value; }
+      get { return _seedGrowth; }
+      private set { _seedGrowth = value; }
     }
 
     /// <summary>
     /// Current growth rate of the seed
     /// </summary>
-    public double GrowthRate
+    public double SeedGrowthRate
     {
-      get { return _growthRate; }
-      private set { _growthRate = value; }
+      get { return _seedGrowthRate; }
+      private set { _seedGrowthRate = value; }
     }
 
     /// <summary>
     /// Base growth of the seed
     /// </summary>
-    public double BaseGrowth
+    public double BaseSeedGrowth
     {
-      get { return _baseGrowth; }
-      private set { _baseGrowth = value; }
+      get { return _baseSeedGrowth; }
+      private set { _baseSeedGrowth = value; }
     }
 
     /// <summary>
-    /// Type of the seed
-    /// <remarks>Vegetable or fruit</remarks>
+    /// Growth of the seed. 
     /// </summary>
-    public Enumerations.SeedType SeedType
+    public double CropGrowth
     {
-      get { return _seedType; }
-      private set { _seedType = value; }
+      get { return _cropGrowth; }
+      private set { _cropGrowth = value; }
     }
 
     /// <summary>
-    /// The lifespan in days, if it is reached the seed will die
+    /// Current growth rate of the seed
     /// </summary>
-    public int LifeSpan
+    public double CropGrowthRate
     {
-      get { return _lifeSpan; }
-      private set { _lifeSpan = value; }
+      get { return _cropGrowthRate; }
+      private set { _cropGrowthRate = value; }
+    }
+
+    /// <summary>
+    /// Base growth of the seed
+    /// </summary>
+    public double BaseCropGrowth
+    {
+      get { return _baseCropGrowth; }
+      private set { _baseCropGrowth = value; }
     }
 
     /// <summary>
@@ -131,6 +141,12 @@ namespace ConsoleFarmingSimulator
       private set { _parentCrop = value; }
     }
 
+    public Enumerations.SeedType SeedType
+    {
+      get { return _seedType; }
+      private set { _seedType = value; }
+    }
+
     /// <summary>
     /// Quality of the seed
     /// </summary>
@@ -140,6 +156,9 @@ namespace ConsoleFarmingSimulator
       private set { _seedQuality = value; }
     }
 
+    /// <summary>
+    /// The optimal temperature for this seed to get his full grow potential
+    /// </summary>
     public double OptimalTemperature
     {
       get { return _optimalTemperature; }
@@ -147,23 +166,32 @@ namespace ConsoleFarmingSimulator
     }
 
     /// <summary>
+    /// The field this seed is planted in
+    /// </summary>
+    public FieldSlot Field
+    {
+      get { return _field; }
+      private set { _field = value; }
+    }
+
+    /// <summary>
     /// Initializes a new seed
     /// </summary>
-    public Seed(string name, double baseGrowth, Enumerations.SeedType seedType, Enumerations.Quality seedQuality, int lifeSpan, double requiredWater, Crop parentCrop, double optimalTemperature)
+    public Seed(string name, double baseSeedGrowth, Enumerations.SeedType seedType, Enumerations.Quality seedQuality, double requiredWater, Crop parentCrop, double optimalTemperature, int cropRate, double baseCropGrowth)
     {
       Name = name;
-      BaseGrowth = baseGrowth;
-      CalculateGrowthRate();
-      SeedType = seedType;
-      Growth = 0;
+      BaseSeedGrowth = baseSeedGrowth;
+      SeedGrowth = 0;
+      BaseCropGrowth = baseCropGrowth;
       Age = 0;
       Health = 100.0;
+      SeedType = seedType;
       SeedQuality = seedQuality;
-      LifeSpan = lifeSpan;
       RequiredWaterBase = requiredWater;
       Crops = new List<Crop>();
       ParentCrop = parentCrop;
       OptimalTemperature = optimalTemperature;
+      _cropRate = cropRate;
     }
 
     /// <summary>
@@ -174,8 +202,8 @@ namespace ConsoleFarmingSimulator
       //TODO: return strings rather than print them
       Console.WriteLine("Name: " + Name);
       Console.WriteLine("Type: " + SeedType);
-      Console.WriteLine("Growth: " + Growth + "%");
-      Console.WriteLine("Base Growth: " + BaseGrowth);
+      Console.WriteLine("Growth: " + SeedGrowth + "%");
+      Console.WriteLine("Base Growth: " + BaseSeedGrowth);
       Console.WriteLine("Health: " + Health + "/100%");
       Console.WriteLine("Quality: " + SeedQuality);
       Console.WriteLine();
@@ -199,7 +227,6 @@ namespace ConsoleFarmingSimulator
     public void Grow()
     {
       Age++;
-      double factor = 1.0;
 
       CalculateRequiredWater();
       if (_field.Water >= _requiredWater)
@@ -215,7 +242,14 @@ namespace ConsoleFarmingSimulator
       }
 
       if (Health != 0)
-        Growth += GrowthRate;
+      {
+        CalculateSeedGrowthRate();
+        CalculateCropGrowthRate();
+
+        SeedGrowth += SeedGrowthRate;
+        CropGrowth += CropGrowthRate;
+        GrowCrops();
+      }
       else
       {
 
@@ -223,15 +257,29 @@ namespace ConsoleFarmingSimulator
     }
 
     /// <summary>
+    /// Sets the growth of the crops to adapt their weights
+    /// </summary>
+    private void GrowCrops()
+    {
+      foreach(Crop crop in Crops)
+      {
+        crop.Growth = CropGrowth;
+      }
+    }
+
+    /// <summary>
     /// Harvest all crops from this seed
     /// </summary>
     public void Harvest()
-    {
-      foreach(Crop crop in Crops)
+    {      
+      foreach (Crop crop in Crops)
       {
         Program.Game.AddCropToInventory(crop);
         this.Crops.Remove(crop);
       }
+
+      if(SeedType == Enumerations.SeedType.Vegetable)
+        Field.RemoveSeed();
     }
 
     /// <summary>
@@ -240,7 +288,7 @@ namespace ConsoleFarmingSimulator
     /// <param name="field">Field in which this seed is planted</param>
     public void SetField(FieldSlot field)
     {
-      _field = field;
+      Field = field;
     }
 
     /// <summary>
@@ -253,12 +301,22 @@ namespace ConsoleFarmingSimulator
     }
 
     /// <summary>
-    /// Calculates the daily growth rate
+    /// Calculates the daily seed growth rate
     /// </summary>
-    private void CalculateGrowthRate()
+    private void CalculateSeedGrowthRate()
     {
       //TODO: do calculations based on weather, quality, current health, water, parent growth rate and a small random factor
-      GrowthRate = BaseGrowth;
+      SeedGrowthRate = BaseSeedGrowth;
+    }
+
+    /// <summary>
+    /// Calculates the daily crop growth rate
+    /// </summary>
+    private void CalculateCropGrowthRate()
+    {
+      if (SeedType == Enumerations.SeedType.Vegetable)
+        CropGrowthRate = BaseCropGrowth;
+      //TODO: else calculate
     }
 
     /// <summary>
@@ -284,6 +342,30 @@ namespace ConsoleFarmingSimulator
     {
       //TODO: Calculate price based on health, quality etc..
       return 10;
+    }
+
+    /// <summary>
+    /// Initializes the crops added when planting this seed
+    /// </summary>
+    public void InitializeCrops()
+    {
+      Random rnd = new Random((int)DateTime.Now.Ticks.GetHashCode());
+
+      //TODO: this will be used when extracting seeds from the finished crop
+      //int extraCropChance = 0;
+      //extraCropChance += (int)SeedQuality;
+      //if (rnd.Next(extraCropChance, 100) == extraCropChance)
+      //  _cropRate++;
+
+      int cropsToGrow = _cropRate;
+      cropsToGrow += rnd.Next(-2, 2);
+
+      for(int i = 0; i < cropsToGrow; i++)
+      {
+        double num = rnd.Next(-10, 10);
+        double newWeight = ((double)((num / 100) * -(int)SeedQuality) * ParentCrop.EndWeight) + ParentCrop.EndWeight;
+        Crops.Add(new Crop(Name, newWeight, this));
+      }    
     }
   }
 }

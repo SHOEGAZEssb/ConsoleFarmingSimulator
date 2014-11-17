@@ -79,6 +79,15 @@ namespace ConsoleFarmingSimulator
       Random rnd = new Random((int)DateTime.Now.Ticks.GetHashCode());
 
       WeatherChangeChance = rnd.Next(0, 10);
+
+      //TODO: implement this somehow
+      //int[] sunChance = new int[2];
+      //int[] rainChance = new int[2];
+      //int[] cloudChance = new int[2];
+      //int[] fogChance = new int[2];
+      //int[] hailChance = new int[2];
+      //int[] snowChance = new int[2];
+
       Enumerations.WeatherCondition supposedChange = Enumerations.WeatherCondition.Sun;
       Enumerations.WeatherCondition secondSupposedChange = Enumerations.WeatherCondition.Sun;
 
@@ -103,7 +112,7 @@ namespace ConsoleFarmingSimulator
 
       if (rnd.Next(0, 100 - WeatherChangeChance) == 0)
       {
-        if (rnd.Next(0, 70) == 70)
+        if (rnd.Next(0, 70) <= 70)
           WeatherCondition = secondSupposedChange;
         else
           WeatherCondition = supposedChange;
