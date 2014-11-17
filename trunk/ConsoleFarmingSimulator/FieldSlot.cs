@@ -50,6 +50,7 @@ namespace ConsoleFarmingSimulator
       {
         PlantedSeed = seed;
         PlantedSeed.SetField(this);
+        PlantedSeed.InitializeCrops();
         Program.GlobalSeedList.Add(seed);
       }
       else

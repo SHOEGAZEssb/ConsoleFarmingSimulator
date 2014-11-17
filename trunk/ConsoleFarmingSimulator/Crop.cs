@@ -2,12 +2,17 @@
 
 namespace ConsoleFarmingSimulator
 {
+  /// <summary>
+  /// Represents a crop grown on a seed
+  /// </summary>
   public class Crop
   {
     private string _name;
-    private double _weight;
+    private double _endWeight;
+    private double _currentWeight;
     private Enumerations.Quality _cropQuality;
     private Seed _parentSeed;
+    private double _growth;
 
     /// <summary>
     /// The name of this crop
@@ -15,16 +20,46 @@ namespace ConsoleFarmingSimulator
     public string Name
     {
       get { return _name; }
-      private set {_name = value;}
+      private set { _name = value; }
     }
 
     /// <summary>
-    /// The weight of this crop
+    /// The weight this crop will have when its fully grown
     /// </summary>
-    public double Weight
+    public double EndWeight
     {
-      get { return _weight; }
-      private set { _weight = value; }
+      get { return _endWeight; }
+      private set
+      {
+        string val = value.ToString("0.000");
+        _endWeight = double.Parse(val);
+      }
+    }
+
+    /// <summary>
+    /// The weight this crop will have when its fully grown
+    /// </summary>
+    public double CurrentWeight
+    {
+      get { return _currentWeight; }
+      private set { _currentWeight = value; }
+    }
+
+    /// <summary>
+    /// Growth of this crop
+    /// </summary>
+    public double Growth
+    {
+      get { return _growth; }
+      set 
+      { 
+        _growth = value;
+
+        if (Growth <= 100)
+          CurrentWeight = EndWeight * Growth;
+        else
+          CurrentWeight = EndWeight * 100;
+      }
     }
 
     /// <summary>
@@ -51,7 +86,8 @@ namespace ConsoleFarmingSimulator
     public Crop(string name, double weight, Seed parentSeed)
     {
       Name = name;
-      Weight = weight;
+      EndWeight = weight;
+      ParentSeed = parentSeed;
       CalculateQuality();
     }
 
@@ -62,7 +98,7 @@ namespace ConsoleFarmingSimulator
     {
       //TODO: return strings rather than printing them
       Console.WriteLine("Name: " + _name);
-      Console.WriteLine("Weight: " + _weight);
+      Console.WriteLine("Weight: " + _endWeight);
     }
 
     /// <summary>
@@ -79,7 +115,7 @@ namespace ConsoleFarmingSimulator
     /// </summary>
     private void CalculateQuality()
     {
-      
+
     }
   }
 }

@@ -29,7 +29,7 @@ namespace ConsoleFarmingSimulator
       /// </summary>
       public static void InitializeStandardSeeds()
       {
-        _seedDic.Add("Cucumber", new Seed("Cucumber", 0.1, Enumerations.SeedType.Vegetable, Enumerations.Quality.Normal, 365, 4, null, 25.5));
+        _seedDic.Add("Cucumber", new Seed("Cucumber", 0.2734, Enumerations.SeedType.Vegetable ,Enumerations.Quality.Normal, 4, null, 25.5, 15, 0.1));
       }
 
       /// <summary>
