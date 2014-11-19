@@ -71,22 +71,21 @@ namespace ConsoleFarmingSimulator
         throw new Exception("There is no seed planted!");
     }
 
-    public void GetInfo()
+    /// <summary>
+    /// Gets info about the field
+    /// </summary>
+    /// <returns>String with info</returns>
+    public string GetInfo()
     {
-      Console.WriteLine("Field Info:");
-      Console.WriteLine("Water: " + Water + " litres.");
-      Console.WriteLine();
-      Console.WriteLine("Planted seed: ");
-      GetSeedInfo();
-      Console.WriteLine();
+      return "Field Info:\r\nWater: " + Water + " litres\r\n\r\nPlanted seed:\r\n" + GetSeedInfo() + "\r\n";
     }
 
-    public void GetSeedInfo()
+    public string GetSeedInfo()
     {
       if (PlantedSeed != null)
-        PlantedSeed.GetInfo();
+        return PlantedSeed.GetInfo();
       else
-        Console.WriteLine("There is no seed planted.");
+        return "There is no seed planted.\r\n"; //TODO: exception (mabye?)
     }
   }
 }

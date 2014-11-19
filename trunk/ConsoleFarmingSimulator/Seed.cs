@@ -195,30 +195,29 @@ namespace ConsoleFarmingSimulator
     }
 
     /// <summary>
-    /// Displays info about the seed
+    /// Gets info about the seed
     /// </summary>
-    public void GetInfo()
+    /// <returns>String with info</returns>
+    public string GetInfo()
     {
-      //TODO: return strings rather than print them
-      Console.WriteLine("Name: " + Name);
-      Console.WriteLine("Type: " + SeedType);
-      Console.WriteLine("Growth: " + SeedGrowth + "%");
-      Console.WriteLine("Base Growth: " + BaseSeedGrowth);
-      Console.WriteLine("Health: " + Health + "/100%");
-      Console.WriteLine("Quality: " + SeedQuality);
-      Console.WriteLine();
+      return "Name: " + Name + "\r\nType: " + SeedType + "\r\nGrowth: " + SeedGrowth + "&\r\nHealth: " + Health + "%\r\n";
     }
 
     /// <summary>
     /// Get info about all crops on this seed
     /// </summary>
-    public void GetDeepInfo()
+    /// <returns>String with info</returns>
+    public string GetDeepInfo()
     {
-      foreach (Crop crop in Crops)
+      string info = "";
+
+      for (int i = 0; i < Crops.Count; i++ )
       {
-        crop.GetInfo();
-        Console.WriteLine();
+        info += Crops[i].GetInfo();
+        info += "\r\n";
       }
+      
+      return info;
     }
 
     /// <summary>

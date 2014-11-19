@@ -132,20 +132,18 @@ namespace ConsoleFarmingSimulator
     }   
 
     /// <summary>
-    /// Prints info about all fields
+    /// Gets info about all fields
     /// </summary>
-    public void GetFieldInfo()
+    public string GetFieldInfo()
     {
-      //TODO: return strings rather than print them
+      string info = "";
+
       for(int i = 0; i < Fields.Count; i++)
       {
-        Console.WriteLine("Field " + (i+1) + ":");
-        Console.WriteLine("Water: " + Fields[i].Water + " litres.");
-        Console.WriteLine();
-        Console.WriteLine("Planted seed in field " + (i+1) + ":");
-        Fields[i].GetSeedInfo();
-        Console.WriteLine();
+        info += "Field " + (i + 1) + ":\r\n" + "Water: " + Fields[i].Water + " litres\r\n\r\nPlanted seed in field " + (i + 1) + ":\r\n" + Fields[i].GetSeedInfo() + "\r\n";
       }
+
+      return info;
     }
 
     /// <summary>
@@ -159,8 +157,6 @@ namespace ConsoleFarmingSimulator
         CropInventory.Add(name, new List<Crop>());
       }
     }
-
-
 
     /// <summary>
     /// Adds a seed to the seed inventory
@@ -199,25 +195,27 @@ namespace ConsoleFarmingSimulator
     }
 
     /// <summary>
-    /// Print all seeds in the seed inventory
+    /// Gets information about all seeds in the seed inventory
     /// </summary>
-    public void PrintSeedInventory()
+    /// <returns>String with info</returns>
+    public string PrintSeedInventory()
     {
-      //TODO: return strings rather than print them
+      string info = "";
+
       foreach(KeyValuePair<string, List<Seed>> entry in SeedInventory)
       {
         if(entry.Value.Count > 0)
         {
-          Console.WriteLine(entry.Key + " Seeds:");
-          Console.WriteLine();
+          info += entry.Key + " Seeds:\r\n\r\n";
+
           for(int i = 0; i < entry.Value.Count; i++)
           {
-            Console.WriteLine("Seed " + (i + 1) + " :");
-            entry.Value[i].GetInfo();
-            Console.WriteLine();
+            info += "Seed " + (i + 1) + " :\r\n" + entry.Value[i].GetInfo() + "\r\n";
           }
         }
       }
+
+      return info;
     }
   }
 }

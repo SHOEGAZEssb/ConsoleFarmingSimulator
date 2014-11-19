@@ -10,7 +10,10 @@ namespace ConsoleFarmingSimulator
     private static Shop _shop;
     public static Timer GlobalSeedTimer = new Timer(5000);
     public static List<Seed> GlobalSeedList = new List<Seed>();
-   
+
+    /// <summary>
+    /// Gets the current running game
+    /// </summary>
     public static Game Game
     {
       get { return _game; }
@@ -27,6 +30,9 @@ namespace ConsoleFarmingSimulator
       MainDialog();
     }
 
+    /// <summary>
+    /// The main choice window
+    /// </summary>
     private static void MainDialog()
     {
       GlobalSeedTimer.Start();
@@ -34,9 +40,7 @@ namespace ConsoleFarmingSimulator
       string anweisung;
       while (true)
       {
-        Console.Clear();
-        DrawStatusBar();
-        Console.WriteLine("Where do you want to go? [fields; stall; shop; save; exit]");
+        PrintInfoMessage("Where do you want to go? [fields; stall; shop; save; exit]");
         anweisung = Console.ReadLine();
 
         if (anweisung == "fields" || anweisung == "f")
@@ -70,11 +74,7 @@ namespace ConsoleFarmingSimulator
 
       while (true)
       {
-        Console.Clear();
-        DrawStatusBar();
-        Console.WriteLine("Which field do you want to manage? [enter index; exit]");
-        Console.WriteLine();
-        Game.GetFieldInfo();
+        PrintInfoMessage("Which field do you want to manage? [enter index; exit]\r\n\r\n" + Game.GetFieldInfo());
 
         anweisung = Console.ReadLine();
 
@@ -135,14 +135,7 @@ namespace ConsoleFarmingSimulator
           else if (remove == "no" || remove == "n")
             break;
           else if (remove == "more info" || remove == "more" || remove == "m")
-          {
-            //TODO: PrintInfo Message, have to rewrite GetDeepInfo first to return strings
-            Console.Clear();
-            DrawStatusBar();
-            Console.WriteLine("The seed has the following Crops: ");
-            plantedSeed.GetDeepInfo();
-            Console.ReadKey();
-          }
+            PrintInfoMessageAndWait("The seed has the following Crops:\r\n\r\n" + plantedSeed.GetDeepInfo());
         }
       }
     }
@@ -190,16 +183,32 @@ namespace ConsoleFarmingSimulator
       }
     }
 
+    /// <summary>
+    /// Prints info about the crops of the planted seed of the given <paramref name="field"/> 
+    /// and lets you select which crop to manage
+    /// </summary>
+    /// <param name="field">Field with the planted seed whose crops should be shown</param>
+    private static void CropInfoDialog(FieldSlot field)
+    {
+      string anweisung;
+      while (true)
+      {
+        PrintInfoMessage("Which crop do you want to manage? [enter index; back]\r\n\r\n" + field.PlantedSeed.GetDeepInfo());
+
+        anweisung = Console.ReadLine();
+        if (anweisung == "back" || anweisung == "b")
+          break;
+
+        //TODO: implement manage crop
+      }
+    }
+
     private static void ManageFieldDialog(FieldSlot field)
     {
       string anweisung;
       while (true)
       {
-        Console.Clear();
-        DrawStatusBar();
-        Console.WriteLine("What do you want to do? [plant seed; remove seed; water field; crop info; sell field; back");
-        Console.WriteLine();
-        field.GetInfo();
+        PrintInfoMessage("What do you want to do? [plant seed; remove seed; water field; crop info; sell field; back]\r\n\r\n" + field.GetInfo());
 
         anweisung = Console.ReadLine();
 
@@ -217,7 +226,7 @@ namespace ConsoleFarmingSimulator
         }
         else if (anweisung == "crop info" || anweisung == "c")
         {
-
+          CropInfoDialog(field);
         }
         else if (anweisung == "sell field" || anweisung == "sell" || anweisung == "s")
         {
@@ -260,7 +269,7 @@ namespace ConsoleFarmingSimulator
     private static void ShopSellDialog()
     {
       string anweisung;
-      while(true)
+      while (true)
       {
         Console.Clear();
         DrawStatusBar();
@@ -294,7 +303,7 @@ namespace ConsoleFarmingSimulator
                 break;
             }
           }
-          catch(Exception ex)
+          catch (Exception ex)
           {
             PrintInfoMessageAndWait("You dont have that seed!");
           }
@@ -306,11 +315,7 @@ namespace ConsoleFarmingSimulator
     {
       while (true)
       {
-        Console.Clear();
-        DrawStatusBar();
-        Console.WriteLine("What do you want to buy? [enter name; back]");
-        Console.WriteLine();
-        _shop.ShowSoldItems();
+        PrintInfoMessage("What do you want to buy? [enter name; back]\r\n\r\n" + _shop.GetSoldSeedInfo());
 
         string kaufAnweisung = Console.ReadLine();
         if (kaufAnweisung == "back" || kaufAnweisung == "b")
@@ -367,7 +372,7 @@ namespace ConsoleFarmingSimulator
       while (true)
       {
         Console.Clear();
-        Console.WriteLine("On what difficulty do you want to play? [easy; medium; hard");
+        Console.WriteLine("On what difficulty do you want to play? [easy; medium; hard]");
         string diff = Console.ReadLine();
         try
         {
@@ -412,6 +417,7 @@ namespace ConsoleFarmingSimulator
       {
         Console.Write("|");
       }
+
       Console.WriteLine();
       Console.Write("|||||");
       Console.ResetColor();

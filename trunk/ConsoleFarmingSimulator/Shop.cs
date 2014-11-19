@@ -29,22 +29,21 @@ namespace ConsoleFarmingSimulator
     }
 
     /// <summary>
-    /// Prints information about all items that are for sale
+    /// Gets information about all items that are for sale
     /// </summary>
-    public void ShowSoldItems()
+    /// <returns>String with info</returns>
+    public string GetSoldSeedInfo()
     {
-      Console.WriteLine("Seeds: ");
-      Console.WriteLine();
+      string info = "Seeds:\r\n\r\n";
 
       int i = 1;
       foreach (KeyValuePair<Seed, double> entry in SoldSeeds)
       {
-        Console.WriteLine("Seed " + i + ":");
-        entry.Key.GetInfo();
-        Console.WriteLine("Price: " + entry.Value + "$");
-        
+        info += "Seed " + i + ":\r\n" + entry.Key.GetInfo() + "\r\nPrice: " + entry.Value + "$\r\n";      
         i++;
       }
+
+      return info;
     }
 
     /// <summary>
