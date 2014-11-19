@@ -31,7 +31,7 @@ namespace ConsoleFarmingSimulator
       get { return _endWeight; }
       private set
       {
-        string val = value.ToString("0.000");
+        string val = value.ToString("0.0000");
         _endWeight = double.Parse(val);
       }
     }
@@ -42,7 +42,11 @@ namespace ConsoleFarmingSimulator
     public double CurrentWeight
     {
       get { return _currentWeight; }
-      private set { _currentWeight = value; }
+      private set 
+      {
+        string val = value.ToString("0.0000");
+        _currentWeight = double.Parse(val); 
+      }
     }
 
     /// <summary>
@@ -52,13 +56,14 @@ namespace ConsoleFarmingSimulator
     {
       get { return _growth; }
       set 
-      { 
-        _growth = value;
+      {
+        string val = value.ToString("0.0000");
+        _growth = double.Parse(val);
 
         if (Growth <= 100)
-          CurrentWeight = EndWeight * Growth;
+          CurrentWeight = (EndWeight * Growth) / 100;
         else
-          CurrentWeight = EndWeight * 100;
+          CurrentWeight = EndWeight;
       }
     }
 
@@ -92,13 +97,13 @@ namespace ConsoleFarmingSimulator
     }
 
     /// <summary>
-    /// Prints info about this crop
+    /// Gets info about this crop
     /// </summary>
-    public void GetInfo()
+    /// <returns>String with info</returns>
+    public string GetInfo()
     {
-      //TODO: return strings rather than printing them
-      Console.WriteLine("Name: " + _name);
-      Console.WriteLine("Weight: " + _endWeight);
+      string info = "Name: " + Name + "\r\nWeight: " + CurrentWeight + "kg\r\nGrowth: " + Growth + "%\r\n";
+      return info;    
     }
 
     /// <summary>
