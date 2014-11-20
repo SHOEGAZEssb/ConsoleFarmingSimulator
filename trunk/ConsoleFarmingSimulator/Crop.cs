@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ConsoleFarmingSimulator
+﻿namespace ConsoleFarmingSimulator
 {
   /// <summary>
   /// Represents a crop grown on a seed
@@ -11,8 +9,8 @@ namespace ConsoleFarmingSimulator
     private double _endWeight;
     private double _currentWeight;
     private Enumerations.Quality _cropQuality;
-    private Seed _parentSeed;
     private double _growth;
+    private Seed _parentSeed;
 
     /// <summary>
     /// The name of this crop
@@ -78,11 +76,11 @@ namespace ConsoleFarmingSimulator
 
     /// <summary>
     /// The parent seed of this crop
-    /// </summary>
+    /// </summary>    
     public Seed ParentSeed
     {
       get { return _parentSeed; }
-      private set { _parentSeed = value; }
+      set { _parentSeed = value; } //TODO: safety
     }
 
     /// <summary>
@@ -92,8 +90,13 @@ namespace ConsoleFarmingSimulator
     {
       Name = name;
       EndWeight = weight;
-      ParentSeed = parentSeed;
       CalculateQuality();
+      ParentSeed = parentSeed;
+    }
+
+    public Crop()
+    {
+
     }
 
     /// <summary>
@@ -107,20 +110,11 @@ namespace ConsoleFarmingSimulator
     }
 
     /// <summary>
-    /// Sets the parent seed
-    /// </summary>
-    /// <param name="seed">Seed to set as parent</param>
-    public void SetParentSeed(Seed seed)
-    {
-      ParentSeed = seed;
-    }
-
-    /// <summary>
     /// Calculates the quality based on... (?)
     /// </summary>
     private void CalculateQuality()
     {
-
+      CropQuality = Enumerations.Quality.Normal;
     }
   }
 }

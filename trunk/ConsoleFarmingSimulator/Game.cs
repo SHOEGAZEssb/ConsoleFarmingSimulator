@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ConsoleFarmingSimulator
 {
-  ///
   class Game
   {
     private Enumerations.Difficulty _difficulty;
@@ -131,6 +129,11 @@ namespace ConsoleFarmingSimulator
       CurrentWeather = new Weather(25.0, Enumerations.WeatherCondition.Sun, 0);
     }   
 
+    public Game()
+    {
+
+    }
+
     /// <summary>
     /// Gets info about all fields
     /// </summary>
@@ -198,7 +201,7 @@ namespace ConsoleFarmingSimulator
     /// Gets information about all seeds in the seed inventory
     /// </summary>
     /// <returns>String with info</returns>
-    public string PrintSeedInventory()
+    public string GetSeedInventoryInfo()
     {
       string info = "";
 

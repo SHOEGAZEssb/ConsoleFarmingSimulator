@@ -25,7 +25,7 @@ namespace ConsoleFarmingSimulator
     public Shop()
     {
       _soldSeeds = new Dictionary<Seed, double>();
-      _soldSeeds.Add(Standards.Seeds.GetStandardSeed("Cucumber"), 0.5);  
+      _soldSeeds.Add(Standards.Seeds.GetStandardSeed("Cucumber"), 0.5);
     }
 
     /// <summary>
@@ -39,7 +39,7 @@ namespace ConsoleFarmingSimulator
       int i = 1;
       foreach (KeyValuePair<Seed, double> entry in SoldSeeds)
       {
-        info += "Seed " + i + ":\r\n" + entry.Key.GetInfo() + "\r\nPrice: " + entry.Value + "$\r\n";      
+        info += "Seed " + i + ":\r\n" + entry.Key.GetInfo() + "\r\nPrice: " + entry.Value + "$\r\n";
         i++;
       }
 
