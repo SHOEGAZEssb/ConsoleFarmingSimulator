@@ -24,8 +24,8 @@ namespace ConsoleFarmingSimulator
     private FieldSlot _field;
     private double _requiredWaterBase;
     private double _requiredWater;
-    private Crop _parentCrop;
     private int _cropRate;
+    private Crop _parentCrop;
 
     /// <summary>
     /// The health of the crop. If it drops to 0, the seed will die and be unusable.
@@ -132,15 +132,6 @@ namespace ConsoleFarmingSimulator
       private set { _requiredWaterBase = value; }
     }
 
-    /// <summary>
-    /// THe crop which contained this seed
-    /// </summary>
-    public Crop ParentCrop
-    {
-      get { return _parentCrop; }
-      private set { _parentCrop = value; }
-    }
-
     public Enumerations.SeedType SeedType
     {
       get { return _seedType; }
@@ -175,6 +166,15 @@ namespace ConsoleFarmingSimulator
     }
 
     /// <summary>
+    /// The crop which contained this seed
+    /// </summary>
+    public Crop ParentCrop
+    {
+      get { return _parentCrop; }
+      set { _parentCrop = value; } //TODO: safety
+    }
+
+    /// <summary>
     /// Initializes a new seed
     /// </summary>
     public Seed(string name, double baseSeedGrowth, Enumerations.SeedType seedType, Enumerations.Quality seedQuality, double requiredWater, Crop parentCrop, double optimalTemperature, int cropRate, double baseCropGrowth)
@@ -189,9 +189,14 @@ namespace ConsoleFarmingSimulator
       SeedQuality = seedQuality;
       RequiredWaterBase = requiredWater;
       Crops = new List<Crop>();
-      ParentCrop = parentCrop;
       OptimalTemperature = optimalTemperature;
       _cropRate = cropRate;
+      ParentCrop = parentCrop;
+    }
+
+    public Seed()
+    {
+
     }
 
     /// <summary>
@@ -288,15 +293,6 @@ namespace ConsoleFarmingSimulator
     public void SetField(FieldSlot field)
     {
       Field = field;
-    }
-
-    /// <summary>
-    /// Sets the parent crop
-    /// </summary>
-    /// <param name="crop">The parent crop of this seed</param>
-    public void SetParentCrop(Crop crop)
-    {
-      ParentCrop = crop;
     }
 
     /// <summary>

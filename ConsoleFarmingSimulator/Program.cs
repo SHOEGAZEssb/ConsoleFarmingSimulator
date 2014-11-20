@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Timers;
+using Polenter.Serialization;
 
 namespace ConsoleFarmingSimulator
 {
@@ -8,8 +8,8 @@ namespace ConsoleFarmingSimulator
   {
     private static Game _game = null;
     private static Shop _shop;
-    public static Timer GlobalSeedTimer = new Timer(5000);
-    public static List<Seed> GlobalSeedList = new List<Seed>();
+    private static Timer GlobalSeedTimer = new Timer(5000);
+    private static SharpSerializer _serializer;
 
     /// <summary>
     /// Gets the current running game
@@ -25,7 +25,7 @@ namespace ConsoleFarmingSimulator
       Standards.InitializeStandards();
       _shop = new Shop();
       GlobalSeedTimer.Elapsed += new ElapsedEventHandler(GlobalSeedTimer_Tick);
-
+      _serializer = new SharpSerializer();
       MainMenueDialog();
       MainDialog();
     }
@@ -57,7 +57,7 @@ namespace ConsoleFarmingSimulator
         }
         else if (anweisung == "save" || anweisung == "sa")
         {
-
+          SaveGame();
         }
         else if (anweisung == "exit" || anweisung == "e")
         {
@@ -65,6 +65,16 @@ namespace ConsoleFarmingSimulator
           Environment.Exit(0);
         }
       }
+    }
+
+    private static void SaveGame()
+    {
+      _serializer.Serialize(_game, "polenter.xml");
+    }
+
+    private static void LoadGame()
+    {
+      _game = (Game)_serializer.Deserialize("polenter.xml");
     }
 
     #region FieldDialogs
@@ -98,10 +108,7 @@ namespace ConsoleFarmingSimulator
       string seedToPlant;
       while (true)
       {
-        Console.Clear();
-        DrawStatusBar();
-        Console.WriteLine("Which seed do you want to plant? [enter name and index; back]");
-        Game.PrintSeedInventory();
+        PrintInfoMessage("Which seed do you want to plant? [enter name and index; back]\r\n\r\n" + Game.GetSeedInventoryInfo());
 
         seedToPlant = Console.ReadLine();
         if (seedToPlant == "back" || seedToPlant == "b")
@@ -274,7 +281,7 @@ namespace ConsoleFarmingSimulator
         Console.Clear();
         DrawStatusBar();
         Console.WriteLine("What do you want to sell? [enter name + index; back]");
-        Game.PrintSeedInventory();
+        Game.GetSeedInventoryInfo();
         anweisung = Console.ReadLine();
 
         if (anweisung == "back" || anweisung == "b")
@@ -351,7 +358,7 @@ namespace ConsoleFarmingSimulator
         }
         else if (anweisung == "continue" || anweisung == "c")
         {
-          //load game
+          LoadGame();
           break;
         }
         else if (anweisung == "exit" || anweisung == "e")
@@ -467,9 +474,10 @@ namespace ConsoleFarmingSimulator
       Game.CurrentWeather.CalculateWeather();
       DrawStatusBar();
 
-      foreach (Seed seed in GlobalSeedList)
+      foreach (FieldSlot field in _game.Fields)
       {
-        seed.Grow();
+        if (field.PlantedSeed != null)
+          field.PlantedSeed.Grow();
       }
     }
 

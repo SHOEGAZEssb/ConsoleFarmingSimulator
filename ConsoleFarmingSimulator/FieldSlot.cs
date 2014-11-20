@@ -51,7 +51,6 @@ namespace ConsoleFarmingSimulator
         PlantedSeed = seed;
         PlantedSeed.SetField(this);
         PlantedSeed.InitializeCrops();
-        Program.GlobalSeedList.Add(seed);
       }
       else
         throw new Exception("There is already a seed planted!");
@@ -63,10 +62,7 @@ namespace ConsoleFarmingSimulator
     public void RemoveSeed()
     {
       if (PlantedSeed != null)
-      {
-        Program.GlobalSeedList.Remove(PlantedSeed);
         PlantedSeed = null;      
-      }
       else
         throw new Exception("There is no seed planted!");
     }

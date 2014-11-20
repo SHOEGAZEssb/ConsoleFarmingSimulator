@@ -69,6 +69,11 @@ namespace ConsoleFarmingSimulator
       CurrentStreak = currentStreak;
     }
 
+    public Weather()
+    {
+
+    }
+
     /// <summary>
     /// Daily calculation of the weather
     /// </summary>

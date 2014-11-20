@@ -39,7 +39,7 @@ namespace ConsoleFarmingSimulator
       {
         foreach (KeyValuePair<string, Seed> entry in _seedDic)
         {
-          entry.Value.SetParentCrop(Crops.GetStandardCrop(entry.Key));
+          entry.Value.ParentCrop = Crops.GetStandardCrop(entry.Key);
         }
       }
     }
@@ -76,7 +76,7 @@ namespace ConsoleFarmingSimulator
       {
         foreach (KeyValuePair<string, Crop> entry in _cropDic)
         {
-          entry.Value.SetParentSeed(Seeds.GetStandardSeed(entry.Key));
+          entry.Value.ParentSeed = Seeds.GetStandardSeed(entry.Key);
         }
       }
     }
