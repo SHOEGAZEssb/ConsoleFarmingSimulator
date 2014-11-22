@@ -30,6 +30,7 @@ namespace ConsoleFarmingSimulator
       public static void InitializeStandardSeeds()
       {
         _seedDic.Add("Cucumber", new Seed("Cucumber", 0.2734, Enumerations.SeedType.Vegetable ,Enumerations.Quality.Normal, 3, null, 25.5, 15, 0.2734));
+        _seedDic.Add("Apple", new Seed("Apple", 0.0342, Enumerations.SeedType.Fruit, Enumerations.Quality.Normal, 30, null, 25, 80, 0.2734));
       }
 
       /// <summary>
@@ -67,6 +68,7 @@ namespace ConsoleFarmingSimulator
       public static void InitializeStandardCrops()
       {
         _cropDic.Add("Cucumber", new Crop("Cucumber", 0.4, null));
+        _cropDic.Add("Apple", new Crop("Apple", 250, null));
       }
 
       /// <summary>
@@ -105,6 +107,7 @@ namespace ConsoleFarmingSimulator
     {
       Objects = new List<string>();
       Objects.Add("Cucumber");
+      Objects.Add("Apple");
     }
   }
 }

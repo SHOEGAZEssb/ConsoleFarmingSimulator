@@ -311,7 +311,13 @@ namespace ConsoleFarmingSimulator
     {
       if (SeedType == Enumerations.SeedType.Vegetable)
         CropGrowthRate = BaseCropGrowth;
-      //TODO: else calculate
+      else
+      {
+        Random rnd = new Random((int)DateTime.Now.Ticks.GetHashCode());
+        double num = rnd.Next(-10, 10);
+        double newRate = (((1.0 + (num / 100)) + (int)Program.Game.CurrentWeather.WeatherCondition / 10) + (BaseCropGrowth - Standards.Seeds.GetStandardSeed("Cucumber").BaseCropGrowth)) * BaseCropGrowth;
+        CropGrowthRate = newRate;
+      }
     }
 
     /// <summary>
