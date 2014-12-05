@@ -116,5 +116,15 @@
     {
       CropQuality = Enumerations.Quality.Normal;
     }
+
+    /// <summary>
+    /// Calculates the price of this crop based on quality and weight
+    /// </summary>
+    /// <returns>Calculated price</returns>
+    public double CalculatePrice()
+    {
+      double price = ((CurrentWeight * Standards.Crops.SingleValues.Prices.GetStandardPrice(Name)) * Standards.Crops.GetStandardCrop(Name).EndWeight)  * (1.0 + ((double)CropQuality / 10.0));
+      return price;
+    }
   }
 }

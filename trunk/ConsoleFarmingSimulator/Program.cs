@@ -142,7 +142,7 @@ namespace ConsoleFarmingSimulator
           else if (remove == "no" || remove == "n")
             break;
           else if (remove == "more info" || remove == "more" || remove == "m")
-            PrintInfoMessageAndWait("The seed has the following Crops:\r\n\r\n" + plantedSeed.GetDeepInfo());
+            PrintInfoMessageAndWait("The seed has the following Crops:\r\n\r\n" + plantedSeed.GetCropInfo());
         }
       }
     }
@@ -200,7 +200,7 @@ namespace ConsoleFarmingSimulator
       string anweisung;
       while (true)
       {
-        PrintInfoMessage("Which crop do you want to manage? [enter index; back]\r\n\r\n" + field.PlantedSeed.GetDeepInfo());
+        PrintInfoMessage("Which crop do you want to manage? [enter index; back]\r\n\r\n" + field.PlantedSeed.GetCropInfo());
 
         anweisung = Console.ReadLine();
         if (anweisung == "back" || anweisung == "b")
@@ -210,12 +210,85 @@ namespace ConsoleFarmingSimulator
       }
     }
 
+    #region Harvest Dialogs
+    private static void HarvestFieldDialog(Seed seed)
+    {
+      string anweisung;
+      while (true)
+      {
+        PrintInfoMessage("Which crops to you want to harvest [all; selection; back]\r\n\r\n" + seed.GetCropInfo());
+
+        anweisung = Console.ReadLine();
+        if (anweisung == "all" || anweisung == "a")
+        {
+          HarvestAllDialog(seed);
+          break;
+        }
+        else if (anweisung == "selection" || anweisung == "s")
+        {
+          HarvestSelectionDialog(seed);
+          if (seed.Crops.Count == 0)
+            break;
+        }
+        else if (anweisung == "back" || anweisung == "b")
+          break;
+
+      }
+    }
+
+    private static void HarvestAllDialog(Seed seed)
+    {
+      string anweisung;
+      while (true)
+      {
+        PrintInfoMessage("Do you really want to harvest all crops? They will be put in your inventory. [yes; no]\r\n\r\n" + seed.GetCropInfo());
+        anweisung = Console.ReadLine();
+
+        if (anweisung == "yes" || anweisung == "y")
+        {
+          seed.Harvest();
+          PrintInfoMessageAndWait("Crops harvested! They have been placed in your inventory.");
+          break;
+        }
+        else if (anweisung == "no" || anweisung == "n")
+          break;
+      }
+    }
+
+    private static void HarvestSelectionDialog(Seed seed)
+    {
+      string anweisung;
+      while(true)
+      {
+        PrintInfoMessage("Which crop do you want to harvest? [enter comma seperated indexes; back]\r\n\r\n" + seed.GetCropInfo());
+
+        anweisung = Console.ReadLine();
+        if (anweisung == "back" || anweisung == "b")
+          break;
+
+        try
+        {
+          string[] indexStrings = anweisung.Split(',');
+          int[] indexes = Array.ConvertAll(indexStrings, int.Parse);
+
+          seed.Harvest(indexes);
+          break;
+        }
+        catch(Exception ex)
+        {
+          PrintInfoMessageAndWait(ex.Message);
+        }
+      }
+    }
+
+    #endregion
+
     private static void ManageFieldDialog(FieldSlot field)
     {
       string anweisung;
       while (true)
       {
-        PrintInfoMessage("What do you want to do? [plant seed; remove seed; water field; crop info; sell field; back]\r\n\r\n" + field.GetInfo());
+        PrintInfoMessage("What do you want to do? [plant seed; remove seed; water field; crop info; harvest; sell field; back]\r\n\r\n" + field.GetInfo());
 
         anweisung = Console.ReadLine();
 
@@ -234,6 +307,10 @@ namespace ConsoleFarmingSimulator
         else if (anweisung == "crop info" || anweisung == "c")
         {
           CropInfoDialog(field);
+        }
+        else if (anweisung == "harvest" || anweisung == "h")
+        {
+          HarvestFieldDialog(field.PlantedSeed);
         }
         else if (anweisung == "sell field" || anweisung == "sell" || anweisung == "s")
         {

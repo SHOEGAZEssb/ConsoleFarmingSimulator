@@ -212,7 +212,7 @@ namespace ConsoleFarmingSimulator
     /// Get info about all crops on this seed
     /// </summary>
     /// <returns>String with info</returns>
-    public string GetDeepInfo()
+    public string GetCropInfo()
     {
       string info = "";
 
@@ -275,15 +275,47 @@ namespace ConsoleFarmingSimulator
     /// Harvest all crops from this seed
     /// </summary>
     public void Harvest()
-    {      
-      foreach (Crop crop in Crops)
+    {
+      Crop[] cropsToRemove = Crops.ToArray(); //used because you cant remove from Crops while enumerating it
+
+      foreach (Crop crop in cropsToRemove)
       {
         Program.Game.AddCropToInventory(crop);
         this.Crops.Remove(crop);
       }
 
-      if(SeedType == Enumerations.SeedType.Vegetable)
+      if (SeedType == Enumerations.SeedType.Vegetable)
         Field.RemoveSeed();
+      else
+        InitializeCrops();
+    }
+
+    /// <summary>
+    /// Harvests a single crop from this seed
+    /// </summary>
+    /// <param name="index">Index of the crop to harvest</param>
+    public void Harvest(int[] indexes)
+    {
+      Crop[] cropsToRemove = new Crop[indexes.Length];
+
+      foreach(int i in indexes)
+      {
+        cropsToRemove[i - 1] = Crops[i - 1];
+      }
+
+      foreach(Crop crop in cropsToRemove)
+      {
+        Program.Game.AddCropToInventory(crop);
+        Crops.Remove(crop);
+      }
+
+      if (Crops.Count == 0)
+      {
+        if (SeedType == Enumerations.SeedType.Vegetable)
+          Field.RemoveSeed();
+        else
+          InitializeCrops();
+      }   
     }
 
     /// <summary>
