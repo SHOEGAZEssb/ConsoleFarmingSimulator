@@ -81,6 +81,28 @@ namespace ConsoleFarmingSimulator
           entry.Value.ParentSeed = Seeds.GetStandardSeed(entry.Key);
         }
       }
+
+      public static class SingleValues
+      {
+        public static class Prices
+        {
+          private static Dictionary<string, double> _cropPriceDic = new Dictionary<string, double>();
+
+          /// <summary>
+          /// Adds prices to the dictionary
+          /// </summary>
+          public static void InitializeStandardCropPrices()
+          {
+            _cropPriceDic.Add("Cucumber", 1.50);
+            _cropPriceDic.Add("Apple", 0.25);
+          }
+
+          public static double GetStandardPrice(string name)
+          {
+            return _cropPriceDic[name];
+          }
+        }
+      }
     }
 
     /// <summary>
@@ -93,6 +115,8 @@ namespace ConsoleFarmingSimulator
       Crops.InitializeStandardCrops();
       Crops.LinkCropParents();
       Seeds.LinkSeedParents();
+
+      Crops.SingleValues.Prices.InitializeStandardCropPrices();
     }
 
     /// <summary>
